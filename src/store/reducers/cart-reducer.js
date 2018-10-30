@@ -1,6 +1,6 @@
 // cartReducer
 import { ADD_TO_CART } from '../mutations'
-
+// 初始商品列表
 const initalCart = {
   cart: [
     {
