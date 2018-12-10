@@ -13,3 +13,6 @@ yarn start
 # not use async methods if necessary:
 yarn add redux-saga
 ```
+
+## demo
+[预览](https://snow-sprite.github.io/redux-demo/build/#)

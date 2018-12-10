@@ -5,13 +5,15 @@ const initalCart = {
   cart: [
     {
       name: 'apple',
+      price: 5,
       num: 10,
       totalMoney: 50
     },
     {
       name: 'banana',
+      price: 2,
       num: 8,
-      totalMoney: 10
+      totalMoney: 16
     }
   ]
 }

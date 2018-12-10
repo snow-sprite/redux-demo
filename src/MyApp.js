@@ -10,20 +10,30 @@ class MyApp extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
-      name: 'default',
+      name: '',
       price: 99,
       num: 1,
-      totalMoney: null
+      totalMoney: null,
+      isSHowTip: false,
+      tipContent: ''
     }
   }
   /*
    * 添加物品
    */
   addCart = () => {
+    if (!this.state.name) {
+      this.setState(pre => ({
+        tipContent: '添加商品名',
+        isSHowTip: !pre.isShowTip
+      }))
+      return
+    }
     this.setState(pre => ({
       totalMoney: pre.num * pre.price
     }), () => {
       store.dispatch(add(this.state))
+      this.setState({name: ''})
     })
   }
 
@@ -70,27 +80,38 @@ class MyApp extends React.Component{
      }))
    }
 
+   /*
+    * 清除提示
+    */
+   clearTip = () => {
+     this.setState({
+       tipContent: '',
+       isSHowTip: false
+     })
+   }
+
   render () {
     const { cartReducer } = store.getState()
     return (
-      <div>
+      <div className="project">
+        <span className="tips">{ this.state.tipContent ? '!' : null } { this.state.tipContent }</span>
         <div className="box">
-          <input type="text" className="select" placeholder="商品名称！" value={this.state.name} onChange={e => this.selectGoods(e)} />
-          <p>
-            <span className="singleName">单价：¥</span><input type="text" className="single" value={this.state.price} onChange={(e) => this.changePrice(e)}/>
+          <input type="text" className="select" placeholder="商品名称！" value={this.state.name} onChange={e => this.selectGoods(e)} onFocus={() => this.clearTip()} />
+          <p className="ml">
+            <span className="singleName">单价：¥</span><input type="number" className="single" value={this.state.price} onChange={(e) => this.changePrice(e)}/>
           </p>
-          <p>
+          <p className="ml">
             <span className="singleName">数量：</span>
             <button className="minus" onClick={() => this.minusGoods()}>-</button>
-            <input type="text" className="input" value={this.state.num} onChange={(e) => this.changeNum(e)}/>
+            <input type="number" className="input" value={this.state.num} onChange={(e) => this.changeNum(e)}/>
             <button className="add" onClick={() => this.addGoods()}>+</button>
           </p>
-          <button className="increase" onClick={() => this.addCart()}>添加</button>
         </div>
+        <button className="increase ml" onClick={() => this.addCart()}>添加</button>
         <ul className="ul">
           {
             cartReducer.cart.map((val, ind) => {
-              return <li className="li" key={ind}><span>商品：{ val.name }</span> <span>数量：{ val.num }</span> <span>总价：{ val.totalMoney }</span></li>
+              return <li className="li" key={ind}><span>商品：{ val.name }</span> <span>单价：{ val.price }</span> <span>数量：{ val.num }</span> <span>总价：{ val.totalMoney }</span></li>
             })
           }
         </ul>
